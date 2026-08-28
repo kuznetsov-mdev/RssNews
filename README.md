@@ -1,3 +1,16 @@
+## RssNews
+
+A simple mobile news application.
+
+The app contains three screens:
+1. **News list** — a scrollable list of news items, each showing a preview image, a headline, and a favourite icon.
+2. **News article** — the full article opened from the news list.
+3. **Favourite news list** — the news items the user has marked as favourite.
+
+The main screen has a bottom navigation bar with two items: **News** and **Favourite**. Tapping the favourite icon on a news item adds it to the favourite news list.
+
+---
+
 This is a Kotlin Multiplatform project targeting Android, iOS.
 
 * [/iosApp](./iosApp/iosApp) contains an iOS application. Even if you’re sharing your UI with Compose Multiplatform,
