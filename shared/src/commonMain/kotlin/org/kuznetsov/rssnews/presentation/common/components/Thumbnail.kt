@@ -1,4 +1,4 @@
-package org.kuznetsov.rssnews.presentation.common
+package org.kuznetsov.rssnews.presentation.common.components
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box

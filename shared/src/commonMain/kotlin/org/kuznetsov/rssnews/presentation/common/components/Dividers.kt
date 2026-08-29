@@ -1,4 +1,4 @@
-package org.kuznetsov.rssnews.presentation.common
+package org.kuznetsov.rssnews.presentation.common.components
 
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.MaterialTheme
