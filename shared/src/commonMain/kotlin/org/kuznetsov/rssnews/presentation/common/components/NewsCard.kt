@@ -40,7 +40,7 @@ fun NewsCard(
             .padding(vertical = 16.dp),
         verticalAlignment = Alignment.Top,
     ) {
-        PlaceholderThumbnail(modifier = Modifier.size(72.dp))
+        PlaceholderThumbnail(modifier = Modifier.size(96.dp))
 
         Column(
             modifier = Modifier
@@ -53,7 +53,7 @@ fun NewsCard(
                 text = headline,
                 color = MaterialTheme.colorScheme.onBackground,
                 style = MaterialTheme.typography.headlineSmall,
-                maxLines = 3,
+                maxLines = 4,
                 overflow = TextOverflow.Ellipsis,
             )
             Spacer(modifier = Modifier.height(6.dp))

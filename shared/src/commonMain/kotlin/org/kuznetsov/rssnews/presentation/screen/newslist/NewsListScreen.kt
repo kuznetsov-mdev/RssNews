@@ -28,7 +28,7 @@ fun NewsListScreen(
 ) {
     LazyColumn(modifier = modifier.fillMaxSize()) {
         item {
-            Column(modifier = Modifier.padding(horizontal = 16.dp, vertical = 16.dp)) {
+            Column(modifier = Modifier.padding(start = 8.dp, end = 16.dp, top = 16.dp, bottom = 16.dp)) {
                 Kicker(text = date)
                 ScreenTitle(text = "Today", modifier = Modifier.padding(top = 4.dp))
             }
@@ -42,7 +42,7 @@ fun NewsListScreen(
                 isFavorite = article.isFavorite,
                 onToggleFavorite = { onToggleFavorite(article) },
                 onClick = { onArticleClick(article) },
-                modifier = Modifier.padding(horizontal = 16.dp),
+                modifier = Modifier.padding(start = 8.dp, end = 16.dp),
             )
             RssDivider()
         }
