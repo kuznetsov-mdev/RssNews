@@ -1,4 +1,4 @@
-package org.kuznetsov.rssnews.presentation.screen
+package org.kuznetsov.rssnews.presentation.feature
 
 import org.kuznetsov.rssnews.presentation.model.ArticleUi
 

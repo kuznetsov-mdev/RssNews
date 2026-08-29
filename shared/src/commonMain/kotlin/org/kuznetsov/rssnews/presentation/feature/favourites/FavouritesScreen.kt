@@ -1,4 +1,4 @@
-package org.kuznetsov.rssnews.presentation.screen.favourites
+package org.kuznetsov.rssnews.presentation.feature.favourites
 
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -18,8 +18,8 @@ import org.kuznetsov.rssnews.presentation.common.components.NewsCard
 import org.kuznetsov.rssnews.presentation.common.components.RssDivider
 import org.kuznetsov.rssnews.presentation.common.components.ScreenTitle
 import org.kuznetsov.rssnews.presentation.model.ArticleUi
-import org.kuznetsov.rssnews.presentation.screen.ScreenPreview
-import org.kuznetsov.rssnews.presentation.screen.sampleArticles
+import org.kuznetsov.rssnews.presentation.feature.ScreenPreview
+import org.kuznetsov.rssnews.presentation.feature.sampleArticles
 
 /** The favourites tab: every story the reader has hearted, newest first. */
 @Composable

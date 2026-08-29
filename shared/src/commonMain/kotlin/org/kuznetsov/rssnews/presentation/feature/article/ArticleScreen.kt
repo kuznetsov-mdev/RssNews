@@ -1,4 +1,4 @@
-package org.kuznetsov.rssnews.presentation.screen.article
+package org.kuznetsov.rssnews.presentation.feature.article
 
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -26,8 +26,8 @@ import org.kuznetsov.rssnews.presentation.common.components.PlaceholderThumbnail
 import org.kuznetsov.rssnews.presentation.common.components.RssIconButton
 import org.kuznetsov.rssnews.presentation.common.components.ScreenTitle
 import org.kuznetsov.rssnews.presentation.model.ArticleUi
-import org.kuznetsov.rssnews.presentation.screen.ScreenPreview
-import org.kuznetsov.rssnews.presentation.screen.sampleArticles
+import org.kuznetsov.rssnews.presentation.feature.ScreenPreview
+import org.kuznetsov.rssnews.presentation.feature.sampleArticles
 
 /** The article reader: lead photo, headline and body copy under a back/favourite/share header. */
 @Composable

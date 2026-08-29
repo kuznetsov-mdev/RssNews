@@ -1,4 +1,4 @@
-package org.kuznetsov.rssnews.presentation.screen
+package org.kuznetsov.rssnews.presentation.feature
 
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.material3.MaterialTheme

@@ -1,4 +1,4 @@
-package org.kuznetsov.rssnews.presentation.screen.newslist
+package org.kuznetsov.rssnews.presentation.feature.newslist
 
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
@@ -14,8 +14,8 @@ import org.kuznetsov.rssnews.presentation.common.components.NewsCard
 import org.kuznetsov.rssnews.presentation.common.components.RssDivider
 import org.kuznetsov.rssnews.presentation.common.components.ScreenTitle
 import org.kuznetsov.rssnews.presentation.model.ArticleUi
-import org.kuznetsov.rssnews.presentation.screen.ScreenPreview
-import org.kuznetsov.rssnews.presentation.screen.sampleArticles
+import org.kuznetsov.rssnews.presentation.feature.ScreenPreview
+import org.kuznetsov.rssnews.presentation.feature.sampleArticles
 
 /** The "Today" news list: a dated masthead over the day's stories. */
 @Composable
