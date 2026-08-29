@@ -2,6 +2,7 @@ package org.kuznetsov.rssnews.presentation.common.components
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
@@ -13,6 +14,8 @@ import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
+import org.kuznetsov.rssnews.presentation.common.ComponentPreview
+import org.kuznetsov.rssnews.presentation.common.LightDarkPreview
 
 /**
  * The diagonally-hatched "no photo yet" placeholder used wherever a story
@@ -52,5 +55,13 @@ private fun Modifier.diagonalHatch(
             strokeWidth = strokeWidthPx,
         )
         offset += spacingPx
+    }
+}
+
+@LightDarkPreview
+@Composable
+private fun PlaceholderThumbnailPreview() {
+    ComponentPreview {
+        PlaceholderThumbnail(modifier = Modifier.size(96.dp))
     }
 }

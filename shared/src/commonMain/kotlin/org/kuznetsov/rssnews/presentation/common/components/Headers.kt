@@ -7,6 +7,8 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.style.TextOverflow
+import org.kuznetsov.rssnews.presentation.common.ComponentPreview
+import org.kuznetsov.rssnews.presentation.common.LightDarkPreview
 
 /**
  * A small uppercase, letter-spaced mono label — used for section eyebrows
@@ -57,4 +59,28 @@ fun Byline(
         maxLines = 1,
         overflow = TextOverflow.Ellipsis,
     )
+}
+
+@LightDarkPreview
+@Composable
+private fun KickerPreview() {
+    ComponentPreview {
+        Kicker(text = "Climate")
+    }
+}
+
+@LightDarkPreview
+@Composable
+private fun ScreenTitlePreview() {
+    ComponentPreview {
+        ScreenTitle(text = "Today")
+    }
+}
+
+@LightDarkPreview
+@Composable
+private fun BylinePreview() {
+    ComponentPreview {
+        Byline(text = "Nadia Ferreira · 6 min read")
+    }
 }

@@ -16,6 +16,8 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
+import org.kuznetsov.rssnews.presentation.common.ComponentPreview
+import org.kuznetsov.rssnews.presentation.common.LightDarkPreview
 
 /**
  * A story row: thumbnail, category kicker, headline and byline, with a
@@ -62,6 +64,21 @@ fun NewsCard(
             isFavorite = isFavorite,
             onToggle = onToggleFavorite,
             modifier = Modifier.width(40.dp),
+        )
+    }
+}
+
+@LightDarkPreview
+@Composable
+private fun NewsCardPreview() {
+    ComponentPreview {
+        NewsCard(
+            category = "Climate",
+            headline = "Rivers reroute as the delta drains a second summer",
+            byline = "Nadia Ferreira · 6 min read",
+            isFavorite = false,
+            onToggleFavorite = {},
+            onClick = {},
         )
     }
 }

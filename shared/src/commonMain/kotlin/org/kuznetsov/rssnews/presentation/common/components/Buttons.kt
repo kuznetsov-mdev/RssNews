@@ -1,6 +1,7 @@
 package org.kuznetsov.rssnews.presentation.common.components
 
 import androidx.compose.foundation.clickable
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
@@ -21,6 +22,9 @@ import androidx.compose.ui.unit.dp
 import com.composables.icons.lucide.ArrowLeft
 import com.composables.icons.lucide.Heart
 import com.composables.icons.lucide.Lucide
+import com.composables.icons.lucide.Share2
+import org.kuznetsov.rssnews.presentation.common.ComponentPreview
+import org.kuznetsov.rssnews.presentation.common.LightDarkPreview
 
 /** The pill-shaped accent button used across the app (e.g. primary calls to action). */
 @Composable
@@ -104,5 +108,40 @@ fun BackButton(
             style = MaterialTheme.typography.bodyLarge,
             modifier = Modifier.padding(start = 6.dp),
         )
+    }
+}
+
+@LightDarkPreview
+@Composable
+private fun RssPrimaryButtonPreview() {
+    ComponentPreview {
+        RssPrimaryButton(text = "Click me!", onClick = {})
+    }
+}
+
+@LightDarkPreview
+@Composable
+private fun RssIconButtonPreview() {
+    ComponentPreview {
+        RssIconButton(icon = Lucide.Share2, contentDescription = "Share", onClick = {})
+    }
+}
+
+@LightDarkPreview
+@Composable
+private fun FavoriteButtonPreview() {
+    ComponentPreview {
+        Row(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
+            FavoriteButton(isFavorite = false, onToggle = {})
+            FavoriteButton(isFavorite = true, onToggle = {})
+        }
+    }
+}
+
+@LightDarkPreview
+@Composable
+private fun BackButtonPreview() {
+    ComponentPreview {
+        BackButton(onClick = {})
     }
 }

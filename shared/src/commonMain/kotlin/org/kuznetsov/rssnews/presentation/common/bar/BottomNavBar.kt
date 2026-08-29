@@ -20,8 +20,14 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.vector.ImageVector
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.semantics.Role
 import androidx.compose.ui.unit.dp
+import org.kuznetsov.rssnews.presentation.common.ComponentPreview
+import org.kuznetsov.rssnews.presentation.common.LightDarkPreview
 import org.kuznetsov.rssnews.presentation.common.components.RssDivider
 
 /** One destination in [RssBottomNavBar] — an icon and its label. */
@@ -96,6 +102,19 @@ private fun RssBottomNavItem(
             text = item.label,
             color = tint,
             style = MaterialTheme.typography.labelMedium,
+        )
+    }
+}
+
+@LightDarkPreview
+@Composable
+private fun RssBottomNavBarPreview() {
+    ComponentPreview {
+        var selectedIndex by remember { mutableStateOf(0) }
+        RssBottomNavBar(
+            items = RssBottomNavDestinations.items,
+            selectedIndex = selectedIndex,
+            onItemSelected = { selectedIndex = it },
         )
     }
 }
