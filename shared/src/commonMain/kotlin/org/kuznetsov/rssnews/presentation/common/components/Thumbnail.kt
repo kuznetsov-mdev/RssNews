@@ -1,6 +1,5 @@
 package org.kuznetsov.rssnews.presentation.common.components
 
-import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -18,43 +17,45 @@ import org.kuznetsov.rssnews.presentation.common.ComponentPreview
 import org.kuznetsov.rssnews.presentation.common.LightDarkPreview
 
 /**
- * The diagonally-hatched "no photo yet" placeholder used wherever a story
+ * The diagonally-striped "no photo yet" placeholder used wherever a story
  * thumbnail or lead photo would go, labelled with a [Kicker].
  */
 @Composable
 fun PlaceholderThumbnail(
     modifier: Modifier = Modifier,
-    label: String = "Photo",
+    label: String = "News",
     cornerRadius: Dp = 4.dp,
 ) {
-    val hatchColor = MaterialTheme.colorScheme.outlineVariant
+    val baseColor = MaterialTheme.colorScheme.surfaceVariant
+    val stripeColor = MaterialTheme.colorScheme.outline
     Box(
         modifier = modifier
             .clip(RoundedCornerShape(cornerRadius))
-            .background(MaterialTheme.colorScheme.surfaceVariant)
-            .diagonalHatch(hatchColor),
+            .diagonalStripes(baseColor, stripeColor),
         contentAlignment = Alignment.Center,
     ) {
         Kicker(text = label, color = MaterialTheme.colorScheme.onSurfaceVariant)
     }
 }
 
-private fun Modifier.diagonalHatch(
-    lineColor: Color,
-    spacing: Dp = 10.dp,
+private fun Modifier.diagonalStripes(
+    baseColor: Color,
+    stripeColor: Color,
+    bandWidth: Dp = 6.dp,
 ): Modifier = drawBehind {
-    val spacingPx = spacing.toPx()
-    val strokeWidthPx = 1.dp.toPx()
+    drawRect(baseColor)
+    val bandPx = bandWidth.toPx()
+    val period = bandPx * 2
     val diagonal = size.width + size.height
     var offset = -size.height
     while (offset < diagonal) {
         drawLine(
-            color = lineColor,
+            color = stripeColor,
             start = Offset(offset, size.height),
             end = Offset(offset + size.height, 0f),
-            strokeWidth = strokeWidthPx,
+            strokeWidth = bandPx,
         )
-        offset += spacingPx
+        offset += period
     }
 }
 
