@@ -1,4 +1,5 @@
 import org.jetbrains.kotlin.gradle.dsl.JvmTarget
+import java.util.Properties
 
 plugins {
     alias(libs.plugins.kotlinMultiplatform)
@@ -12,6 +13,34 @@ plugins {
 
 room {
     schemaDirectory("$projectDir/schemas")
+}
+
+val generateApiKeys by tasks.registering {
+    val outputDir = layout.buildDirectory.dir("generated/apiKeys/commonMain/kotlin")
+    val localProperties = rootProject.file("local.properties")
+    inputs.file(localProperties).optional()
+    outputs.dir(outputDir)
+
+    doLast {
+        val props = Properties()
+        if (localProperties.exists()) {
+            localProperties.inputStream().use { props.load(it) }
+        }
+        val apiKey = props.getProperty("newsdataio.api.key").orEmpty()
+
+        val packageDir = outputDir.get().asFile.resolve("org/kuznetsov/rssnews")
+        packageDir.mkdirs()
+        packageDir.resolve("ApiKeys.kt").writeText(
+            """
+            package org.kuznetsov.rssnews
+
+            internal object ApiKeys {
+                const val NEWSDATA_API_KEY: String = "$apiKey"
+            }
+
+            """.trimIndent()
+        )
+    }
 }
 
 kotlin {
@@ -47,6 +76,10 @@ kotlin {
     }
     
     sourceSets {
+        commonMain {
+            kotlin.srcDir(generateApiKeys.map { it.outputs.files.singleFile })
+        }
+
         androidMain.dependencies {
             implementation(libs.compose.uiToolingPreview)
             implementation(libs.compose.uiTooling)
