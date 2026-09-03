@@ -6,9 +6,9 @@ import org.kuznetsov.rssnews.domain.model.NewsState
 
 interface NewsRepositoryApi {
 
-    suspend fun findAll(): Flow<List<NewsState>>
+    fun findAll(): Flow<List<NewsState>>
 
-    suspend fun findByQuery(query: String): Flow<List<NewsState>>
+    fun findByQuery(query: String): Flow<List<NewsState>>
 
     suspend fun addToFavourite(news: NewsState)
 
