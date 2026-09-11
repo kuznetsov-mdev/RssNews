@@ -9,9 +9,15 @@ import io.ktor.http.HttpHeaders
 import io.ktor.http.HttpStatusCode
 import io.ktor.http.headersOf
 import io.ktor.serialization.kotlinx.json.json
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.first
+import kotlinx.coroutines.flow.map
+import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.test.runTest
 import kotlinx.serialization.json.Json
+import org.kuznetsov.rssnews.data.local.NewsDao
+import org.kuznetsov.rssnews.data.local.NewsEntity
 import org.kuznetsov.rssnews.data.remote.RssNewsApiClient
 import org.kuznetsov.rssnews.domain.model.NewsId
 import kotlin.test.Test
@@ -19,6 +25,29 @@ import kotlin.test.assertEquals
 import kotlin.test.assertFalse
 import kotlin.test.assertNull
 import kotlin.test.assertTrue
+
+private class FakeNewsDao : NewsDao {
+    private val entities = MutableStateFlow<Map<String, NewsEntity>>(emptyMap())
+
+    override suspend fun insert(news: NewsEntity) {
+        entities.update { it + (news.id to news) }
+    }
+
+    override fun getAll(): Flow<List<NewsEntity>> = entities.map { it.values.toList() }
+
+    override suspend fun getById(newsId: String): NewsEntity = entities.value.getValue(newsId)
+
+    override fun getByTitle(title: String): Flow<List<NewsEntity>> =
+        entities.map { map -> map.values.filter { it.title.contains(title) } }
+
+    override suspend fun delete(news: NewsEntity) {
+        entities.update { it - news.id }
+    }
+
+    override suspend fun deleteById(newsId: String) {
+        entities.update { it - newsId }
+    }
+}
 
 private const val RESPONSE_JSON = """
 {
@@ -60,7 +89,7 @@ class NewsRepositoryImplTest {
                 json(Json { ignoreUnknownKeys = true })
             }
         }
-        return NewsRepositoryImpl(RssNewsApiClient(httpClient))
+        return NewsRepositoryImpl(RssNewsApiClient(httpClient), FakeNewsDao())
     }
 
     @Test
