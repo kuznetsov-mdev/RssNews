@@ -12,14 +12,9 @@ import org.jetbrains.compose.resources.getString
 import org.kuznetsov.rssnews.domain.api.NewsRepositoryApi
 import org.kuznetsov.rssnews.domain.model.NewsState
 import org.kuznetsov.rssnews.presentation.model.ArticleUi
+import org.kuznetsov.rssnews.presentation.model.toArticleUi
 import rssnews.shared.generated.resources.Res
 import rssnews.shared.generated.resources.error_failed_to_load_news
-
-data class NewsListUiState(
-    val isLoading: Boolean = false,
-    val articles: List<ArticleUi> = emptyList(),
-    val errorMessage: String? = null,
-)
 
 class NewsListViewModel(
     private val repositoryApi: NewsRepositoryApi
@@ -63,11 +58,3 @@ class NewsListViewModel(
             .launchIn(viewModelScope)
     }
 }
-
-private fun NewsState.toArticleUi(): ArticleUi = ArticleUi(
-    id = id.id,
-    category = topic.topic,
-    headline = title.title,
-    byline = author.name,
-    isFavorite = isFavourite,
-)
