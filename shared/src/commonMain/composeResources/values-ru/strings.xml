@@ -2,4 +2,7 @@
     <string name="app_name">RssNews</string>
     <string name="nav_news">Новости</string>
     <string name="nav_favourite">Избранное</string>
+    <string name="error_failed_to_load_news">Не удалось загрузить новости</string>
+    <string name="empty_search_no_results">Ничего не найдено.</string>
+    <string name="empty_favourites">Пока нет избранного.</string>
 </resources>

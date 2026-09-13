@@ -1,0 +1,6 @@
+<resources>
+    <plurals name="saved_stories_count">
+        <item quantity="one">%d story saved</item>
+        <item quantity="other">%d stories saved</item>
+    </plurals>
+</resources>

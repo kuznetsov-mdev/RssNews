@@ -15,6 +15,7 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
+import org.jetbrains.compose.resources.stringResource
 import org.kuznetsov.rssnews.presentation.common.LightDarkPreview
 import org.kuznetsov.rssnews.presentation.common.components.Byline
 import org.kuznetsov.rssnews.presentation.common.components.Kicker
@@ -26,6 +27,8 @@ import org.kuznetsov.rssnews.presentation.feature.ScreenPreview
 import org.kuznetsov.rssnews.presentation.feature.filterByQuery
 import org.kuznetsov.rssnews.presentation.feature.sampleArticles
 import org.kuznetsov.rssnews.presentation.model.ArticleUi
+import rssnews.shared.generated.resources.Res
+import rssnews.shared.generated.resources.empty_search_no_results
 
 /** The "Today" news list: a dated masthead, a search field, and the day's stories. */
 @Composable
@@ -61,7 +64,7 @@ fun NewsListScreen(
                         .padding(48.dp),
                     contentAlignment = Alignment.Center,
                 ) {
-                    Byline(text = "Nothing found.")
+                    Byline(text = stringResource(Res.string.empty_search_no_results))
                 }
             }
         } else {

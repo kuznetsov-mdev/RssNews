@@ -1,0 +1,8 @@
+<resources>
+    <plurals name="saved_stories_count">
+        <item quantity="one">%d история сохранена</item>
+        <item quantity="few">%d истории сохранены</item>
+        <item quantity="many">%d историй сохранено</item>
+        <item quantity="other">%d истории сохранены</item>
+    </plurals>
+</resources>

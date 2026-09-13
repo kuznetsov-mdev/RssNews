@@ -8,9 +8,12 @@ import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.launch
+import org.jetbrains.compose.resources.getString
 import org.kuznetsov.rssnews.domain.api.NewsRepositoryApi
 import org.kuznetsov.rssnews.domain.model.NewsState
 import org.kuznetsov.rssnews.presentation.model.ArticleUi
+import rssnews.shared.generated.resources.Res
+import rssnews.shared.generated.resources.error_failed_to_load_news
 
 data class NewsListUiState(
     val isLoading: Boolean = false,
@@ -51,10 +54,10 @@ class NewsListViewModel(
                     articles = page.items.map { it.toArticleUi() },
                 )
             }
-            .catch { throwable ->
+            .catch {
                 _state.value = _state.value.copy(
                     isLoading = false,
-                    errorMessage = throwable.message ?: "Failed to load news",
+                    errorMessage = getString(Res.string.error_failed_to_load_news),
                 )
             }
             .launchIn(viewModelScope)
