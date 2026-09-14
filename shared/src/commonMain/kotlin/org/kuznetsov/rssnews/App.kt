@@ -33,7 +33,6 @@ import org.kuznetsov.rssnews.presentation.feature.favourites.FavouritesScreen
 import org.kuznetsov.rssnews.presentation.feature.newslist.NewsListScreen
 import org.kuznetsov.rssnews.presentation.feature.newslist.NewsListUiState
 import org.kuznetsov.rssnews.presentation.feature.newslist.NewsListViewModel
-import org.kuznetsov.rssnews.presentation.model.ArticleUi
 import org.kuznetsov.rssnews.presentation.navigation.AppDestination
 import org.kuznetsov.rssnews.presentation.theme.RssNewsTheme
 
@@ -75,17 +74,21 @@ fun App() {
                         }
                     }
                     composable<AppDestination.Favourites> {
-                        NewsStateGate(state) {
-                            FavouritesScreen(
-                                articles = state.articles.filter(ArticleUi::isFavorite),
-                                onArticleClick = { navController.navigate(AppDestination.Article(it.id)) },
-                                onToggleFavorite = viewModel::onToggleFavourite,
-                            )
-                        }
+                        val favourites by viewModel.favourites.collectAsStateWithLifecycle()
+                        FavouritesScreen(
+                            articles = favourites,
+                            onArticleClick = { navController.navigate(AppDestination.Article(it.id)) },
+                            onToggleFavorite = viewModel::onToggleFavourite,
+                        )
                     }
                     composable<AppDestination.Article> { entry ->
                         val route: AppDestination.Article = entry.toRoute()
+                        val favourites by viewModel.favourites.collectAsStateWithLifecycle()
+                        // Checked in both places: a favourited article may not be part of
+                        // today's feed (or the feed may have failed to load) but must still
+                        // open, since favourites are sourced independently of it.
                         val article = state.articles.find { it.id == route.articleId }
+                            ?: favourites.find { it.id == route.articleId }
                         if (article != null) {
                             ArticleScreen(
                                 article = article,
@@ -96,7 +99,7 @@ fun App() {
                             )
                         } else {
                             NewsStateGate(state) {
-                                LaunchedEffect(state.articles) { navController.popBackStack() }
+                                LaunchedEffect(state.articles, favourites) { navController.popBackStack() }
                             }
                         }
                     }

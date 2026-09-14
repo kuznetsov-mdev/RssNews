@@ -11,6 +11,8 @@ interface NewsRepositoryApi {
 
     fun findByQuery(query: String, page: String? = null): Flow<NewsPage>
 
+    fun getFavourites(): Flow<List<NewsState>>
+
     suspend fun addToFavourite(news: NewsState)
 
     suspend fun removeFromFavourite(newsId: NewsId)

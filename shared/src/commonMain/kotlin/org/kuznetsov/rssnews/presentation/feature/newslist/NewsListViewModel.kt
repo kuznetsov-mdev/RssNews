@@ -5,16 +5,20 @@ import androidx.lifecycle.viewModelScope
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.FlowPreview
 import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.flow.debounce
 import kotlinx.coroutines.flow.flatMapLatest
 import kotlinx.coroutines.flow.launchIn
+import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.onEach
+import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import org.jetbrains.compose.resources.getString
 import org.kuznetsov.rssnews.domain.api.NewsRepositoryApi
+import org.kuznetsov.rssnews.domain.model.NewsId
 import org.kuznetsov.rssnews.domain.model.NewsState
 import org.kuznetsov.rssnews.presentation.model.ArticleUi
 import org.kuznetsov.rssnews.presentation.model.toArticleUi
@@ -30,6 +34,12 @@ class NewsListViewModel(
     private val _state = MutableStateFlow(NewsListUiState(isLoading = true))
     val state: StateFlow<NewsListUiState> = _state
 
+    // Sourced straight from local storage (NewsDao), independent of the remote feed's
+    // load state — favourites must stay visible even when findAll()/findByQuery() fails.
+    val favourites: StateFlow<List<ArticleUi>> = repositoryApi.getFavourites()
+        .map { list -> list.map { it.toArticleUi() } }
+        .stateIn(viewModelScope, SharingStarted.WhileSubscribed(5_000), emptyList())
+
     private val query = MutableStateFlow("")
     private var newsById: Map<String, NewsState> = emptyMap()
 
@@ -43,11 +53,13 @@ class NewsListViewModel(
     }
 
     fun onToggleFavourite(article: ArticleUi) {
-        val news = newsById[article.id] ?: return
         viewModelScope.launch {
             if (article.isFavorite) {
-                repositoryApi.removeFromFavourite(news.id)
+                // Removing only needs the id, so this works even for articles that came
+                // from the local favourites list rather than the currently-fetched feed.
+                repositoryApi.removeFromFavourite(NewsId(article.id))
             } else {
+                val news = newsById[article.id] ?: return@launch
                 repositoryApi.addToFavourite(news)
             }
         }

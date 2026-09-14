@@ -20,6 +20,9 @@ class NewsRepositoryImpl(
 
     override fun findByQuery(query: String, page: String?): Flow<NewsPage> = newsFlow(query, page)
 
+    override fun getFavourites(): Flow<List<NewsState>> =
+        newsDao.getAll().map { entities -> entities.map { it.toDomain().copy(isFavourite = true) } }
+
     override suspend fun addToFavourite(news: NewsState) {
         newsDao.insert(news.toEntity())
     }

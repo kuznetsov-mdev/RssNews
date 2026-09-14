@@ -75,7 +75,10 @@ private const val RESPONSE_JSON = """
 
 class NewsRepositoryImplTest {
 
-    private fun repository(captured: MutableList<HttpRequestData> = mutableListOf()): NewsRepositoryImpl {
+    private fun repository(
+        captured: MutableList<HttpRequestData> = mutableListOf(),
+        dao: NewsDao = FakeNewsDao(),
+    ): NewsRepositoryImpl {
         val engine = MockEngine { request ->
             captured += request
             respond(
@@ -89,7 +92,17 @@ class NewsRepositoryImplTest {
                 json(Json { ignoreUnknownKeys = true })
             }
         }
-        return NewsRepositoryImpl(RssNewsApiClient(httpClient), FakeNewsDao())
+        return NewsRepositoryImpl(RssNewsApiClient(httpClient), dao)
+    }
+
+    private fun failingRepository(dao: NewsDao): NewsRepositoryImpl {
+        val engine = MockEngine { respond(content = "", status = HttpStatusCode.InternalServerError) }
+        val httpClient = HttpClient(engine) {
+            install(ContentNegotiation) {
+                json(Json { ignoreUnknownKeys = true })
+            }
+        }
+        return NewsRepositoryImpl(RssNewsApiClient(httpClient), dao)
     }
 
     @Test
@@ -157,5 +170,28 @@ class NewsRepositoryImplTest {
 
         val updated = repo.findAll().first()
         assertFalse(updated.items.single { it.id.id == "id-1" }.isFavourite)
+    }
+
+    @Test
+    fun getFavouritesReturnsAddedItemsMarkedFavourite() = runTest {
+        val repo = repository()
+
+        val page = repo.findAll().first()
+        repo.addToFavourite(page.items.first { it.id.id == "id-1" })
+
+        val favourites = repo.getFavourites().first()
+        assertEquals(listOf("id-1"), favourites.map { it.id.id })
+        assertTrue(favourites.single().isFavourite)
+    }
+
+    @Test
+    fun getFavouritesStaysAvailableWhenApiFails() = runTest {
+        val dao = FakeNewsDao()
+        val page = repository(dao = dao).findAll().first()
+        repository(dao = dao).addToFavourite(page.items.first { it.id.id == "id-1" })
+
+        val favourites = failingRepository(dao).getFavourites().first()
+
+        assertEquals(listOf("id-1"), favourites.map { it.id.id })
     }
 }
