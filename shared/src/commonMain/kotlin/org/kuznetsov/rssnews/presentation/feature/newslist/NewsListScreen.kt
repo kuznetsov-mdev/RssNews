@@ -8,10 +8,6 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
@@ -24,7 +20,6 @@ import org.kuznetsov.rssnews.presentation.common.components.RssDivider
 import org.kuznetsov.rssnews.presentation.common.components.RssSearchField
 import org.kuznetsov.rssnews.presentation.common.components.ScreenTitle
 import org.kuznetsov.rssnews.presentation.feature.ScreenPreview
-import org.kuznetsov.rssnews.presentation.feature.filterByQuery
 import org.kuznetsov.rssnews.presentation.feature.sampleArticles
 import org.kuznetsov.rssnews.presentation.model.ArticleUi
 import rssnews.shared.generated.resources.Res
@@ -34,14 +29,13 @@ import rssnews.shared.generated.resources.empty_search_no_results
 @Composable
 fun NewsListScreen(
     date: String,
+    query: String,
+    onQueryChange: (String) -> Unit,
     articles: List<ArticleUi>,
     onArticleClick: (ArticleUi) -> Unit,
     onToggleFavorite: (ArticleUi) -> Unit,
     modifier: Modifier = Modifier,
 ) {
-    var query by remember { mutableStateOf("") }
-    val visibleArticles = remember(articles, query) { articles.filterByQuery(query) }
-
     LazyColumn(modifier = modifier.fillMaxSize()) {
         item {
             Column(modifier = Modifier.padding(horizontal = 16.dp, vertical = 16.dp)) {
@@ -49,14 +43,14 @@ fun NewsListScreen(
                 ScreenTitle(text = "Today", modifier = Modifier.padding(top = 4.dp))
                 RssSearchField(
                     query = query,
-                    onQueryChange = { query = it },
+                    onQueryChange = onQueryChange,
                     placeholder = "Search today's stories",
                     modifier = Modifier.padding(top = 16.dp),
                 )
             }
             RssDivider()
         }
-        if (visibleArticles.isEmpty()) {
+        if (articles.isEmpty()) {
             item {
                 Box(
                     modifier = Modifier
@@ -68,7 +62,7 @@ fun NewsListScreen(
                 }
             }
         } else {
-            items(visibleArticles, key = { it.id }) { article ->
+            items(articles, key = { it.id }) { article ->
                 NewsCard(
                     category = article.category,
                     headline = article.headline,
@@ -77,6 +71,7 @@ fun NewsListScreen(
                     onToggleFavorite = { onToggleFavorite(article) },
                     onClick = { onArticleClick(article) },
                     modifier = Modifier.padding(horizontal = 16.dp),
+                    previewUrl = article.previewUrl,
                 )
                 RssDivider()
             }
@@ -90,6 +85,8 @@ private fun NewsListScreenPreview() {
     ScreenPreview {
         NewsListScreen(
             date = "Friday, 28 August 2026",
+            query = "",
+            onQueryChange = {},
             articles = sampleArticles,
             onArticleClick = {},
             onToggleFavorite = {},

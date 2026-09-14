@@ -19,6 +19,9 @@ import androidx.navigation.compose.composable
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.toRoute
+import coil3.ImageLoader
+import coil3.compose.setSingletonImageLoaderFactory
+import coil3.network.ktor3.KtorNetworkFetcherFactory
 import kotlin.time.Clock
 import kotlin.time.ExperimentalTime
 import org.koin.compose.viewmodel.koinViewModel
@@ -37,6 +40,11 @@ import org.kuznetsov.rssnews.presentation.theme.RssNewsTheme
 @Composable
 @Preview
 fun App() {
+    setSingletonImageLoaderFactory { context ->
+        ImageLoader.Builder(context)
+            .components { add(KtorNetworkFetcherFactory()) }
+            .build()
+    }
     RssNewsTheme {
         Surface(modifier = Modifier.fillMaxSize()) {
             val viewModel: NewsListViewModel = koinViewModel()
@@ -58,6 +66,8 @@ fun App() {
                         NewsStateGate(state) {
                             NewsListScreen(
                                 date = todayLabel(),
+                                query = state.query,
+                                onQueryChange = viewModel::onQueryChange,
                                 articles = state.articles,
                                 onArticleClick = { navController.navigate(AppDestination.Article(it.id)) },
                                 onToggleFavorite = viewModel::onToggleFavourite,

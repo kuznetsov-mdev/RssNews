@@ -8,4 +8,5 @@ data class ArticleUi(
     val byline: String,
     val isFavorite: Boolean,
     val body: String = "",
+    val previewUrl: String? = null,
 )

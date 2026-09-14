@@ -8,4 +8,5 @@ fun NewsState.toArticleUi(): ArticleUi = ArticleUi(
     headline = title.title,
     byline = author.name,
     isFavorite = isFavourite,
+    previewUrl = previewUrl?.url,
 )

@@ -2,11 +2,16 @@ package org.kuznetsov.rssnews.presentation.feature.newslist
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import kotlinx.coroutines.ExperimentalCoroutinesApi
+import kotlinx.coroutines.FlowPreview
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.catch
+import kotlinx.coroutines.flow.debounce
+import kotlinx.coroutines.flow.flatMapLatest
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
+import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import org.jetbrains.compose.resources.getString
 import org.kuznetsov.rssnews.domain.api.NewsRepositoryApi
@@ -16,6 +21,8 @@ import org.kuznetsov.rssnews.presentation.model.toArticleUi
 import rssnews.shared.generated.resources.Res
 import rssnews.shared.generated.resources.error_failed_to_load_news
 
+private const val SEARCH_DEBOUNCE_MS = 400L
+
 class NewsListViewModel(
     private val repositoryApi: NewsRepositoryApi
 ) : ViewModel() {
@@ -23,10 +30,16 @@ class NewsListViewModel(
     private val _state = MutableStateFlow(NewsListUiState(isLoading = true))
     val state: StateFlow<NewsListUiState> = _state
 
+    private val query = MutableStateFlow("")
     private var newsById: Map<String, NewsState> = emptyMap()
 
     init {
-        loadNews()
+        observeNews()
+    }
+
+    fun onQueryChange(newQuery: String) {
+        _state.update { it.copy(query = newQuery) }
+        query.value = newQuery
     }
 
     fun onToggleFavourite(article: ArticleUi) {
@@ -40,20 +53,27 @@ class NewsListViewModel(
         }
     }
 
-    private fun loadNews() {
-        repositoryApi.findAll()
+    @OptIn(FlowPreview::class, ExperimentalCoroutinesApi::class)
+    private fun observeNews() {
+        query
+            .debounce(SEARCH_DEBOUNCE_MS)
+            .flatMapLatest { currentQuery ->
+                if (currentQuery.isBlank()) repositoryApi.findAll() else repositoryApi.findByQuery(currentQuery)
+            }
             .onEach { page ->
                 newsById = page.items.associateBy { it.id.id }
-                _state.value = NewsListUiState(
-                    isLoading = false,
-                    articles = page.items.map { it.toArticleUi() },
-                )
+                _state.update {
+                    it.copy(
+                        isLoading = false,
+                        articles = page.items.map { news -> news.toArticleUi() },
+                        errorMessage = null,
+                    )
+                }
             }
             .catch {
-                _state.value = _state.value.copy(
-                    isLoading = false,
-                    errorMessage = getString(Res.string.error_failed_to_load_news),
-                )
+                _state.update {
+                    it.copy(isLoading = false, errorMessage = getString(Res.string.error_failed_to_load_news))
+                }
             }
             .launchIn(viewModelScope)
     }

@@ -22,7 +22,7 @@ import org.kuznetsov.rssnews.presentation.common.components.BackButton
 import org.kuznetsov.rssnews.presentation.common.components.Byline
 import org.kuznetsov.rssnews.presentation.common.components.FavoriteButton
 import org.kuznetsov.rssnews.presentation.common.components.Kicker
-import org.kuznetsov.rssnews.presentation.common.components.PlaceholderThumbnail
+import org.kuznetsov.rssnews.presentation.common.components.NewsThumbnail
 import org.kuznetsov.rssnews.presentation.common.components.RssIconButton
 import org.kuznetsov.rssnews.presentation.common.components.ScreenTitle
 import org.kuznetsov.rssnews.presentation.model.ArticleUi
@@ -56,7 +56,8 @@ fun ArticleScreen(
             RssIconButton(icon = Lucide.Share2, contentDescription = "Share", onClick = onShareClick)
         }
 
-        PlaceholderThumbnail(
+        NewsThumbnail(
+            previewUrl = article.previewUrl,
             modifier = Modifier
                 .fillMaxWidth()
                 .height(220.dp),

@@ -1,6 +1,7 @@
 package org.kuznetsov.rssnews.presentation.common.components
 
 import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.MaterialTheme
@@ -11,10 +12,41 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.draw.drawBehind
 import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
+import coil3.compose.SubcomposeAsyncImage
 import org.kuznetsov.rssnews.presentation.common.ComponentPreview
 import org.kuznetsov.rssnews.presentation.common.LightDarkPreview
+
+/**
+ * A story thumbnail loaded from [previewUrl]. Falls back to [PlaceholderThumbnail]
+ * when there's no url, the image is still loading, or it failed to load.
+ */
+@Composable
+fun NewsThumbnail(
+    previewUrl: String?,
+    modifier: Modifier = Modifier,
+    label: String = "News",
+    cornerRadius: Dp = 4.dp,
+) {
+    if (previewUrl.isNullOrBlank()) {
+        PlaceholderThumbnail(modifier = modifier, label = label, cornerRadius = cornerRadius)
+    } else {
+        SubcomposeAsyncImage(
+            model = previewUrl,
+            contentDescription = null,
+            contentScale = ContentScale.Crop,
+            modifier = modifier.clip(RoundedCornerShape(cornerRadius)),
+            loading = {
+                PlaceholderThumbnail(modifier = Modifier.fillMaxSize(), label = label, cornerRadius = cornerRadius)
+            },
+            error = {
+                PlaceholderThumbnail(modifier = Modifier.fillMaxSize(), label = label, cornerRadius = cornerRadius)
+            },
+        )
+    }
+}
 
 /**
  * The diagonally-striped "no photo yet" placeholder used wherever a story

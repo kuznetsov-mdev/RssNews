@@ -90,6 +90,7 @@ fun FavouritesScreen(
                     onToggleFavorite = { onToggleFavorite(article) },
                     onClick = { onArticleClick(article) },
                     modifier = Modifier.padding(horizontal = 16.dp),
+                    previewUrl = article.previewUrl,
                 )
                 RssDivider()
             }

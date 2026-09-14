@@ -32,6 +32,7 @@ fun NewsCard(
     onToggleFavorite: () -> Unit,
     onClick: () -> Unit,
     modifier: Modifier = Modifier,
+    previewUrl: String? = null,
 ) {
     Row(
         modifier = modifier
@@ -40,7 +41,7 @@ fun NewsCard(
             .padding(vertical = 16.dp),
         verticalAlignment = Alignment.Top,
     ) {
-        PlaceholderThumbnail(modifier = Modifier.size(96.dp))
+        NewsThumbnail(previewUrl = previewUrl, modifier = Modifier.size(96.dp))
 
         Column(
             modifier = Modifier
