@@ -16,6 +16,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import org.kuznetsov.rssnews.presentation.common.ComponentPreview
 import org.kuznetsov.rssnews.presentation.common.LightDarkPreview
 
@@ -53,7 +54,7 @@ fun NewsCard(
             Text(
                 text = headline,
                 color = MaterialTheme.colorScheme.onBackground,
-                style = MaterialTheme.typography.headlineSmall,
+                style = MaterialTheme.typography.headlineSmall.copy(fontSize = 18.sp, lineHeight = 24.sp),
                 maxLines = 4,
                 overflow = TextOverflow.Ellipsis,
             )
