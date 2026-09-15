@@ -135,8 +135,13 @@ private fun NewsStateGate(state: NewsListUiState, content: @Composable () -> Uni
     }
 }
 
+private const val RuRegion = "RU"
+
 @OptIn(ExperimentalTime::class)
-private fun todayLabel(): String = Clock.System.now().toString().substringBefore('T')
+private fun todayLabel(): String {
+    val (year, month, day) = Clock.System.now().toString().substringBefore('T').split("-")
+    return if (currentRegion() == RuRegion) "$day.$month.$year" else "$year-$month-$day"
+}
 
 private val FavouritesRoute = AppDestination.Favourites::class.qualifiedName
 private val ArticleRoutePrefix = AppDestination.Article::class.qualifiedName.orEmpty()
