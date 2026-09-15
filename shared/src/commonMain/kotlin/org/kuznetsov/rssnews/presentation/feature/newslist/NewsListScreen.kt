@@ -31,6 +31,8 @@ import org.kuznetsov.rssnews.presentation.feature.sampleArticles
 import org.kuznetsov.rssnews.presentation.model.ArticleUi
 import rssnews.shared.generated.resources.Res
 import rssnews.shared.generated.resources.empty_search_no_results
+import rssnews.shared.generated.resources.news_list_search_placeholder
+import rssnews.shared.generated.resources.news_list_title
 
 private const val LOAD_MORE_THRESHOLD = 3
 
@@ -67,15 +69,15 @@ fun NewsListScreen(
                 Column(modifier = Modifier.padding(horizontal = 16.dp, vertical = 16.dp)) {
                     Row(
                         modifier = Modifier.fillMaxWidth(),
-                        verticalAlignment = Alignment.Bottom,
+                        verticalAlignment = Alignment.CenterVertically,
                     ) {
-                        ScreenTitle(text = "Today", modifier = Modifier.weight(1f))
+                        ScreenTitle(text = stringResource(Res.string.news_list_title), modifier = Modifier.weight(1f))
                         Kicker(text = date)
                     }
                     RssSearchField(
                         query = query,
                         onQueryChange = onQueryChange,
-                        placeholder = "Search today's stories",
+                        placeholder = stringResource(Res.string.news_list_search_placeholder),
                         modifier = Modifier.padding(top = 16.dp),
                     )
                 }

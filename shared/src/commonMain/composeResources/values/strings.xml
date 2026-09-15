@@ -5,4 +5,6 @@
     <string name="error_failed_to_load_news">Failed to load news</string>
     <string name="empty_search_no_results">Nothing found.</string>
     <string name="empty_favourites">No favourites yet.</string>
+    <string name="news_list_title">Today</string>
+    <string name="news_list_search_placeholder">Search</string>
 </resources>
