@@ -7,7 +7,13 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.lazy.rememberLazyListState
+import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.derivedStateOf
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
@@ -25,6 +31,8 @@ import org.kuznetsov.rssnews.presentation.model.ArticleUi
 import rssnews.shared.generated.resources.Res
 import rssnews.shared.generated.resources.empty_search_no_results
 
+private const val LOAD_MORE_THRESHOLD = 3
+
 /** The "Today" news list: a dated masthead, a search field, and the day's stories. */
 @Composable
 fun NewsListScreen(
@@ -32,11 +40,27 @@ fun NewsListScreen(
     query: String,
     onQueryChange: (String) -> Unit,
     articles: List<ArticleUi>,
+    isLoadingMore: Boolean,
+    onLoadMore: () -> Unit,
     onArticleClick: (ArticleUi) -> Unit,
     onToggleFavorite: (ArticleUi) -> Unit,
     modifier: Modifier = Modifier,
 ) {
-    LazyColumn(modifier = modifier.fillMaxSize()) {
+    val listState = rememberLazyListState()
+    val shouldLoadMore by remember {
+        derivedStateOf {
+            val layoutInfo = listState.layoutInfo
+            val lastVisibleIndex = layoutInfo.visibleItemsInfo.lastOrNull()?.index ?: -1
+            layoutInfo.totalItemsCount > 0 && lastVisibleIndex >= layoutInfo.totalItemsCount - LOAD_MORE_THRESHOLD
+        }
+    }
+    LaunchedEffect(shouldLoadMore, articles) {
+        if (shouldLoadMore && articles.isNotEmpty()) {
+            onLoadMore()
+        }
+    }
+
+    LazyColumn(state = listState, modifier = modifier.fillMaxSize()) {
         item {
             Column(modifier = Modifier.padding(horizontal = 16.dp, vertical = 16.dp)) {
                 Kicker(text = date)
@@ -75,6 +99,18 @@ fun NewsListScreen(
                 )
                 RssDivider()
             }
+            if (isLoadingMore) {
+                item {
+                    Box(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .padding(24.dp),
+                        contentAlignment = Alignment.Center,
+                    ) {
+                        CircularProgressIndicator()
+                    }
+                }
+            }
         }
     }
 }
@@ -88,6 +124,8 @@ private fun NewsListScreenPreview() {
             query = "",
             onQueryChange = {},
             articles = sampleArticles,
+            isLoadingMore = false,
+            onLoadMore = {},
             onArticleClick = {},
             onToggleFavorite = {},
         )

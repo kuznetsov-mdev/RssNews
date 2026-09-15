@@ -9,6 +9,7 @@ import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.flow.debounce
+import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.flatMapLatest
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.map
@@ -34,8 +35,6 @@ class NewsListViewModel(
     private val _state = MutableStateFlow(NewsListUiState(isLoading = true))
     val state: StateFlow<NewsListUiState> = _state
 
-    // Sourced straight from local storage (NewsDao), independent of the remote feed's
-    // load state — favourites must stay visible even when findAll()/findByQuery() fails.
     val favourites: StateFlow<List<ArticleUi>> = repositoryApi.getFavourites()
         .map { list -> list.map { it.toArticleUi() } }
         .stateIn(viewModelScope, SharingStarted.WhileSubscribed(5_000), emptyList())
@@ -50,6 +49,36 @@ class NewsListViewModel(
     fun onQueryChange(newQuery: String) {
         _state.update { it.copy(query = newQuery) }
         query.value = newQuery
+    }
+
+    fun loadMore() {
+        val current = _state.value
+        val page = current.nextPage ?: return
+        if (current.isLoadingMore) return
+
+        viewModelScope.launch {
+            _state.update { it.copy(isLoadingMore = true) }
+            val currentQuery = current.query
+            runCatching {
+                val flow = if (currentQuery.isBlank()) {
+                    repositoryApi.findAll(page)
+                } else {
+                    repositoryApi.findByQuery(currentQuery, page)
+                }
+                flow.first()
+            }.onSuccess { newPage ->
+                newsById = newsById + newPage.items.associateBy { it.id.id }
+                _state.update {
+                    it.copy(
+                        isLoadingMore = false,
+                        articles = it.articles + newPage.items.map { news -> news.toArticleUi() },
+                        nextPage = newPage.nextPage,
+                    )
+                }
+            }.onFailure {
+                _state.update { it.copy(isLoadingMore = false) }
+            }
+        }
     }
 
     fun onToggleFavourite(article: ArticleUi) {
@@ -78,6 +107,7 @@ class NewsListViewModel(
                     it.copy(
                         isLoading = false,
                         articles = page.items.map { news -> news.toArticleUi() },
+                        nextPage = page.nextPage,
                         errorMessage = null,
                     )
                 }

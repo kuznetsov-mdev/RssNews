@@ -68,6 +68,8 @@ fun App() {
                                 query = state.query,
                                 onQueryChange = viewModel::onQueryChange,
                                 articles = state.articles,
+                                isLoadingMore = state.isLoadingMore,
+                                onLoadMore = viewModel::loadMore,
                                 onArticleClick = { navController.navigate(AppDestination.Article(it.id)) },
                                 onToggleFavorite = viewModel::onToggleFavourite,
                             )
@@ -84,9 +86,6 @@ fun App() {
                     composable<AppDestination.Article> { entry ->
                         val route: AppDestination.Article = entry.toRoute()
                         val favourites by viewModel.favourites.collectAsStateWithLifecycle()
-                        // Checked in both places: a favourited article may not be part of
-                        // today's feed (or the feed may have failed to load) but must still
-                        // open, since favourites are sourced independently of it.
                         val article = state.articles.find { it.id == route.articleId }
                             ?: favourites.find { it.id == route.articleId }
                         if (article != null) {
