@@ -17,7 +17,7 @@ fun RssDivider(
     HorizontalDivider(
         modifier = modifier,
         thickness = 1.dp,
-        color = MaterialTheme.colorScheme.outlineVariant,
+        color = MaterialTheme.colorScheme.outline,
     )
 }
 

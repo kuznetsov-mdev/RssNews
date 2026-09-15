@@ -46,17 +46,19 @@ fun FavouritesScreen(
 
     LazyColumn(modifier = modifier.fillMaxSize()) {
         item {
-            Column(modifier = Modifier.padding(horizontal = 16.dp, vertical = 16.dp)) {
-                Kicker(text = pluralStringResource(Res.plurals.saved_stories_count, articles.size, articles.size))
-                ScreenTitle(text = "Favourites", modifier = Modifier.padding(top = 4.dp))
-                RssSearchField(
-                    query = query,
-                    onQueryChange = { query = it },
-                    placeholder = "Search saved stories",
-                    modifier = Modifier.padding(top = 16.dp),
-                )
+            Column {
+                Column(modifier = Modifier.padding(horizontal = 16.dp, vertical = 16.dp)) {
+                    Kicker(text = pluralStringResource(Res.plurals.saved_stories_count, articles.size, articles.size))
+                    ScreenTitle(text = "Favourites", modifier = Modifier.padding(top = 4.dp))
+                    RssSearchField(
+                        query = query,
+                        onQueryChange = { query = it },
+                        placeholder = "Search saved stories",
+                        modifier = Modifier.padding(top = 16.dp),
+                    )
+                }
+                RssDivider()
             }
-            RssDivider()
         }
         if (articles.isEmpty()) {
             item {
@@ -82,17 +84,19 @@ fun FavouritesScreen(
             }
         } else {
             items(visibleArticles, key = { it.id }) { article ->
-                NewsCard(
-                    category = article.category,
-                    headline = article.headline,
-                    byline = article.byline,
-                    isFavorite = article.isFavorite,
-                    onToggleFavorite = { onToggleFavorite(article) },
-                    onClick = { onArticleClick(article) },
-                    modifier = Modifier.padding(horizontal = 16.dp),
-                    previewUrl = article.previewUrl,
-                )
-                RssDivider()
+                Column {
+                    NewsCard(
+                        category = article.category,
+                        headline = article.headline,
+                        byline = article.byline,
+                        isFavorite = article.isFavorite,
+                        onToggleFavorite = { onToggleFavorite(article) },
+                        onClick = { onArticleClick(article) },
+                        modifier = Modifier.padding(horizontal = 16.dp),
+                        previewUrl = article.previewUrl,
+                    )
+                    RssDivider()
+                }
             }
         }
     }
