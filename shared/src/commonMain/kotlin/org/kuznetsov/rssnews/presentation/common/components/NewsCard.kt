@@ -54,7 +54,7 @@ fun NewsCard(
             Text(
                 text = headline,
                 color = MaterialTheme.colorScheme.onBackground,
-                style = MaterialTheme.typography.headlineSmall.copy(fontSize = 18.sp, lineHeight = 24.sp),
+                style = MaterialTheme.typography.headlineSmall.copy(fontSize = 16.sp, lineHeight = 24.sp),
                 maxLines = 4,
                 overflow = TextOverflow.Ellipsis,
             )
