@@ -62,17 +62,19 @@ fun NewsListScreen(
 
     LazyColumn(state = listState, modifier = modifier.fillMaxSize()) {
         item {
-            Column(modifier = Modifier.padding(horizontal = 16.dp, vertical = 16.dp)) {
-                Kicker(text = date)
-                ScreenTitle(text = "Today", modifier = Modifier.padding(top = 4.dp))
-                RssSearchField(
-                    query = query,
-                    onQueryChange = onQueryChange,
-                    placeholder = "Search today's stories",
-                    modifier = Modifier.padding(top = 16.dp),
-                )
+            Column {
+                Column(modifier = Modifier.padding(horizontal = 16.dp, vertical = 16.dp)) {
+                    Kicker(text = date)
+                    ScreenTitle(text = "Today", modifier = Modifier.padding(top = 4.dp))
+                    RssSearchField(
+                        query = query,
+                        onQueryChange = onQueryChange,
+                        placeholder = "Search today's stories",
+                        modifier = Modifier.padding(top = 16.dp),
+                    )
+                }
+                RssDivider()
             }
-            RssDivider()
         }
         if (articles.isEmpty()) {
             item {
@@ -87,17 +89,19 @@ fun NewsListScreen(
             }
         } else {
             items(articles, key = { it.id }) { article ->
-                NewsCard(
-                    category = article.category,
-                    headline = article.headline,
-                    byline = article.byline,
-                    isFavorite = article.isFavorite,
-                    onToggleFavorite = { onToggleFavorite(article) },
-                    onClick = { onArticleClick(article) },
-                    modifier = Modifier.padding(horizontal = 16.dp),
-                    previewUrl = article.previewUrl,
-                )
-                RssDivider()
+                Column {
+                    NewsCard(
+                        category = article.category,
+                        headline = article.headline,
+                        byline = article.byline,
+                        isFavorite = article.isFavorite,
+                        onToggleFavorite = { onToggleFavorite(article) },
+                        onClick = { onArticleClick(article) },
+                        modifier = Modifier.padding(horizontal = 8.dp),
+                        previewUrl = article.previewUrl,
+                    )
+                    RssDivider()
+                }
             }
             if (isLoadingMore) {
                 item {
