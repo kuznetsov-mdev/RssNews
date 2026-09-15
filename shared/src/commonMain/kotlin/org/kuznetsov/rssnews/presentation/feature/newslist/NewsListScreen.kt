@@ -2,6 +2,7 @@ package org.kuznetsov.rssnews.presentation.feature.newslist
 
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
@@ -64,8 +65,13 @@ fun NewsListScreen(
         item {
             Column {
                 Column(modifier = Modifier.padding(horizontal = 16.dp, vertical = 16.dp)) {
-                    Kicker(text = date)
-                    ScreenTitle(text = "Today", modifier = Modifier.padding(top = 4.dp))
+                    Row(
+                        modifier = Modifier.fillMaxWidth(),
+                        verticalAlignment = Alignment.Bottom,
+                    ) {
+                        ScreenTitle(text = "Today", modifier = Modifier.weight(1f))
+                        Kicker(text = date)
+                    }
                     RssSearchField(
                         query = query,
                         onQueryChange = onQueryChange,
