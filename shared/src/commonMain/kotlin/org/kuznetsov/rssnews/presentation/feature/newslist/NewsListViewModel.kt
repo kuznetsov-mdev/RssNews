@@ -8,6 +8,7 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.catch
+import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.debounce
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.flatMapLatest
@@ -33,11 +34,18 @@ class NewsListViewModel(
 ) : ViewModel() {
 
     private val _state = MutableStateFlow(NewsListUiState(isLoading = true))
-    val state: StateFlow<NewsListUiState> = _state
 
     val favourites: StateFlow<List<ArticleUi>> = repositoryApi.getFavourites()
         .map { list -> list.map { it.toArticleUi() } }
         .stateIn(viewModelScope, SharingStarted.WhileSubscribed(5_000), emptyList())
+
+    // isFavorite is overlaid here, on top of the fetched/paginated article list, rather
+    // than baked into that list at fetch time. That keeps toggling a favourite from
+    // resetting or re-fetching the list (and losing scroll position / loaded pages).
+    val state: StateFlow<NewsListUiState> = combine(_state, favourites) { state, favourites ->
+        val favouriteIds = favourites.mapTo(mutableSetOf()) { it.id }
+        state.copy(articles = state.articles.map { it.copy(isFavorite = it.id in favouriteIds) })
+    }.stateIn(viewModelScope, SharingStarted.WhileSubscribed(5_000), _state.value)
 
     private val query = MutableStateFlow("")
     private var newsById: Map<String, NewsState> = emptyMap()
@@ -84,8 +92,6 @@ class NewsListViewModel(
     fun onToggleFavourite(article: ArticleUi) {
         viewModelScope.launch {
             if (article.isFavorite) {
-                // Removing only needs the id, so this works even for articles that came
-                // from the local favourites list rather than the currently-fetched feed.
                 repositoryApi.removeFromFavourite(NewsId(article.id))
             } else {
                 val news = newsById[article.id] ?: return@launch
