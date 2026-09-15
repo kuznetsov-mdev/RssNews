@@ -1,0 +1,8 @@
+<resources>
+    <string name="app_name">RssNews</string>
+    <string name="nav_news">Noticias</string>
+    <string name="nav_favourite">Favoritos</string>
+    <string name="error_failed_to_load_news">Error al cargar las noticias</string>
+    <string name="empty_search_no_results">No se encontraron resultados.</string>
+    <string name="empty_favourites">Aún no hay favoritos.</string>
+</resources>
