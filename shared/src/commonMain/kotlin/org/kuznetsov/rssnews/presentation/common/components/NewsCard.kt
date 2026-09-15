@@ -47,7 +47,7 @@ fun NewsCard(
         Column(
             modifier = Modifier
                 .weight(1f)
-                .padding(horizontal = 12.dp),
+                .padding(horizontal = 6.dp),
         ) {
             Kicker(text = category)
             Spacer(modifier = Modifier.height(4.dp))
@@ -55,7 +55,7 @@ fun NewsCard(
                 text = headline,
                 color = MaterialTheme.colorScheme.onBackground,
                 style = MaterialTheme.typography.headlineSmall.copy(fontSize = 16.sp, lineHeight = 24.sp),
-                maxLines = 4,
+                maxLines = 3,
                 overflow = TextOverflow.Ellipsis,
             )
             Spacer(modifier = Modifier.height(6.dp))
