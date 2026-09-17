@@ -9,6 +9,7 @@ plugins {
     alias(libs.plugins.ksp)
     alias(libs.plugins.kotlinxSerialization)
     alias(libs.plugins.androidxRoom)
+    alias(libs.plugins.kover)
 }
 
 room {
@@ -122,6 +123,13 @@ kotlin {
             implementation(libs.kotlinx.coroutines.test)
             implementation(libs.ktor.client.mock)
         }
+        getByName("androidHostTest") {
+            dependencies {
+                implementation(libs.koin.test)
+                implementation(libs.robolectric)
+                implementation(libs.junit)
+            }
+        }
     }
 }
 
@@ -131,4 +139,20 @@ dependencies {
     add("kspAndroid", libs.androidx.room.compiler)
     add("kspIosArm64", libs.androidx.room.compiler)
     add("kspIosSimulatorArm64", libs.androidx.room.compiler)
+}
+
+// Robolectric (used by androidHostTest) reflects into JDK internals that are encapsulated
+// by the module system since JDK 17; without these the test JVM fails with
+// IllegalAccessException before any test body runs. See https://robolectric.org/getting-started/
+tasks.withType<Test>().configureEach {
+    jvmArgs(
+        "--add-opens=java.base/java.lang=ALL-UNNAMED",
+        "--add-opens=java.base/java.util=ALL-UNNAMED",
+        "--add-opens=java.base/java.io=ALL-UNNAMED",
+        "--add-opens=java.base/java.net=ALL-UNNAMED",
+        "--add-opens=java.base/java.security=ALL-UNNAMED",
+        "--add-opens=java.base/java.text=ALL-UNNAMED",
+        "--add-opens=java.base/jdk.internal.access=ALL-UNNAMED",
+        "--add-opens=java.desktop/java.awt.font=ALL-UNNAMED",
+    )
 }
