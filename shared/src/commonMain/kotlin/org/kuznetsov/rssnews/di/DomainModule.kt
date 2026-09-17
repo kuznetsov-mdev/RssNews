@@ -1,5 +1,6 @@
 package org.kuznetsov.rssnews.di
 
+import org.koin.dsl.bind
 import org.koin.dsl.module
 import org.kuznetsov.rssnews.data.local.NewsDao
 import org.kuznetsov.rssnews.data.remote.RssNewsApiClient
@@ -19,7 +20,7 @@ val domainModule = module {
             apiClient = get<RssNewsApiClient>(),
             newsDao = get<NewsDao>()
         )
-    }
+    } bind NewsRepositoryApi::class
 
     factory { FetchNewsUseCase(repository = get<NewsRepositoryApi>()) }
     factory { (query: String) -> GetNewsByQueryUseCase(repository = get(), query) }

@@ -13,13 +13,17 @@ data class NewsDataResponseDto(
 
 @Serializable
 data class NewsDto(
-    @SerialName("article_id") val id: String,
+    @SerialName("article_id")
+    val id: String,
     val title: String,
     val link: String,
     val description: String? = null,
-    @SerialName("pubDate") val publishedAt: String? = null,
-    @SerialName("image_url") val imageUrl: String? = null,
-    @SerialName("source_name") val sourceName: String? = null,
+    @SerialName("pubDate")
+    val publishedAt: String? = null,
+    @SerialName("image_url")
+    val imageUrl: String? = null,
+    @SerialName("source_name")
+    val sourceName: String? = null,
     val creator: List<String>? = null,
     val category: List<String>? = null
 )
