@@ -7,4 +7,7 @@
     <string name="empty_favourites">No favourites yet.</string>
     <string name="news_list_title">Today</string>
     <string name="news_list_search_placeholder">Search</string>
+    <string name="article_read_more_prefix"> (You can read the full article on the </string>
+    <string name="article_read_more_link">website</string>
+    <string name="article_read_more_suffix"> or with a paid subscription)</string>
 </resources>

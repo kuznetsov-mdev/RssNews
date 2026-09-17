@@ -9,4 +9,5 @@ data class ArticleUi(
     val isFavorite: Boolean,
     val body: String = "",
     val previewUrl: String? = null,
+    val sourceUrl: String = "",
 )

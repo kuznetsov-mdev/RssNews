@@ -9,7 +9,7 @@ const val DB_NAME = "rss_news.db"
 
 expect fun getDataBaseBuilder(): RoomDatabase.Builder<AppDataBase>
 
-@Database(entities = [NewsEntity::class], version = 1)
+@Database(entities = [NewsEntity::class], version = 2)
 @ConstructedBy(AppDataBaseConstructor::class)
 abstract class AppDataBase : RoomDatabase() {
     abstract  fun newsDao(): NewsDao

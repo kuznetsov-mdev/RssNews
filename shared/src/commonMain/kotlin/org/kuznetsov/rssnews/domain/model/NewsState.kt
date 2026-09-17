@@ -6,5 +6,7 @@ data class NewsState(
     val topic: NewsTopic,
     val author: NewsAuthor,
     val previewUrl: PreviewUrl?,
+    val body: String = "",
+    val sourceUrl: String = "",
     val isFavourite: Boolean = false
 )

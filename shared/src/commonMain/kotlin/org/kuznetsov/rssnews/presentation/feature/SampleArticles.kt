@@ -13,6 +13,7 @@ internal val sampleArticles = listOf(
         body = "The delta's channels have shifted twice since spring, leaving fishing " +
             "villages to rebuild docks around a coastline that no longer matches the map. " +
             "Engineers say the pattern will likely repeat every dry season from here on.",
+        sourceUrl = "https://example.com/rivers-reroute",
     ),
     ArticleUi(
         id = "2",
@@ -22,6 +23,7 @@ internal val sampleArticles = listOf(
         isFavorite = true,
         body = "Policymakers voted unanimously to hold the benchmark rate, citing easing " +
             "inflation and a labour market that has cooled without cracking.",
+        sourceUrl = "https://example.com/central-bank-holds-rates",
     ),
     ArticleUi(
         id = "3",
@@ -31,5 +33,6 @@ internal val sampleArticles = listOf(
         isFavorite = true,
         body = "A pilot programme is rotating visiting specialists between four rural " +
             "counties, aiming to cut wait times without adding new hires.",
+        sourceUrl = "https://example.com/rural-clinics-two-day-week",
     ),
 )

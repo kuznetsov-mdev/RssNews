@@ -16,7 +16,9 @@ fun NewsDto.toDomain(): NewsState = NewsState(
     title = NewsTitle(title),
     topic = NewsTopic(category?.firstOrNull().orEmpty()),
     author = NewsAuthor(creator?.firstOrNull() ?: sourceName.orEmpty()),
-    previewUrl = PreviewUrl(imageUrl)
+    previewUrl = PreviewUrl(imageUrl),
+    body = description.orEmpty(),
+    sourceUrl = link
 )
 
 fun NewsEntity.toDomain(): NewsState = NewsState(
@@ -24,7 +26,9 @@ fun NewsEntity.toDomain(): NewsState = NewsState(
     title = NewsTitle(title),
     topic = NewsTopic(topic),
     author = NewsAuthor(author),
-    previewUrl = PreviewUrl(previewUrl)
+    previewUrl = PreviewUrl(previewUrl),
+    body = body,
+    sourceUrl = sourceUrl
 )
 
 @OptIn(ExperimentalTime::class)
@@ -34,5 +38,7 @@ fun NewsState.toEntity(createdAt: Long = Clock.System.now().toEpochMilliseconds(
     topic = topic.topic,
     author = author.name,
     previewUrl = previewUrl?.url,
+    body = body,
+    sourceUrl = sourceUrl,
     createdAt = createdAt
 )

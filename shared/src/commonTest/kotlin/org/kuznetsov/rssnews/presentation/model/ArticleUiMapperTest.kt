@@ -21,6 +21,8 @@ class ArticleUiMapperTest {
             topic = NewsTopic("Tech"),
             author = NewsAuthor("Jane Doe"),
             previewUrl = PreviewUrl("https://example.com/img.png"),
+            body = "Full description",
+            sourceUrl = "https://example.com/article",
             isFavourite = true,
         )
 
@@ -32,6 +34,8 @@ class ArticleUiMapperTest {
         assertEquals("Jane Doe", ui.byline)
         assertEquals(true, ui.isFavorite)
         assertEquals("https://example.com/img.png", ui.previewUrl)
+        assertEquals("Full description", ui.body)
+        assertEquals("https://example.com/article", ui.sourceUrl)
     }
 
     @Test

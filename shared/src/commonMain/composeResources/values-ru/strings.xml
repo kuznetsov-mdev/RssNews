@@ -7,4 +7,7 @@
     <string name="empty_favourites">Пока нет избранного.</string>
     <string name="news_list_title">Сегодня</string>
     <string name="news_list_search_placeholder">Поиск</string>
+    <string name="article_read_more_prefix"> (Полную версию статьи можно прочитать на </string>
+    <string name="article_read_more_link">сайте</string>
+    <string name="article_read_more_suffix"> или оформив платную подписку)</string>
 </resources>

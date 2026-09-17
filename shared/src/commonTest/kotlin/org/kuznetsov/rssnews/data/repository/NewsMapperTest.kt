@@ -37,7 +37,23 @@ class NewsMapperTest {
         assertEquals("politics", state.topic.topic)
         assertEquals("Author", state.author.name)
         assertEquals("https://example.com/img.png", state.previewUrl?.url)
+        assertEquals("desc", state.body)
+        assertEquals("https://example.com/1", state.sourceUrl)
         assertFalse(state.isFavourite)
+    }
+
+    @Test
+    fun usesEmptyBodyWhenDescriptionMissing() {
+        val dto = NewsDto(
+            id = "id-5",
+            title = "Title",
+            link = "https://example.com/5",
+            description = null
+        )
+
+        val state = dto.toDomain()
+
+        assertEquals("", state.body)
     }
 
     @Test
@@ -91,6 +107,8 @@ class NewsMapperTest {
             topic = "politics",
             author = "Author",
             previewUrl = "https://example.com/img.png",
+            body = "desc",
+            sourceUrl = "https://example.com/1",
             createdAt = 1_000L
         )
 
@@ -101,6 +119,8 @@ class NewsMapperTest {
         assertEquals("politics", state.topic.topic)
         assertEquals("Author", state.author.name)
         assertEquals("https://example.com/img.png", state.previewUrl?.url)
+        assertEquals("desc", state.body)
+        assertEquals("https://example.com/1", state.sourceUrl)
         assertFalse(state.isFavourite)
     }
 
@@ -128,6 +148,8 @@ class NewsMapperTest {
             topic = NewsTopic("politics"),
             author = NewsAuthor("Author"),
             previewUrl = PreviewUrl("https://example.com/img.png"),
+            body = "desc",
+            sourceUrl = "https://example.com/1",
             isFavourite = true
         )
 
@@ -138,6 +160,8 @@ class NewsMapperTest {
         assertEquals("politics", entity.topic)
         assertEquals("Author", entity.author)
         assertEquals("https://example.com/img.png", entity.previewUrl)
+        assertEquals("desc", entity.body)
+        assertEquals("https://example.com/1", entity.sourceUrl)
         assertEquals(42L, entity.createdAt)
     }
 

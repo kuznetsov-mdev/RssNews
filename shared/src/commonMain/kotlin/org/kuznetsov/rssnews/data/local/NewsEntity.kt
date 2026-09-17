@@ -11,5 +11,7 @@ data class NewsEntity(
     val topic: String,
     val author: String,
     val previewUrl: String?,
+    val body: String = "",
+    val sourceUrl: String = "",
     val createdAt: Long
 )
