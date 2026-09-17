@@ -12,8 +12,10 @@ import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalUriHandler
 import androidx.compose.ui.text.LinkAnnotation
 import androidx.compose.ui.text.SpanStyle
 import androidx.compose.ui.text.TextLinkStyles
@@ -26,6 +28,7 @@ import com.composables.icons.lucide.Share2
 import org.jetbrains.compose.resources.stringResource
 import org.kuznetsov.rssnews.presentation.common.LightDarkPreview
 import org.kuznetsov.rssnews.presentation.common.components.BackButton
+import org.kuznetsov.rssnews.presentation.common.rememberInAppUriHandler
 import org.kuznetsov.rssnews.presentation.common.components.Byline
 import org.kuznetsov.rssnews.presentation.common.components.FavoriteButton
 import org.kuznetsov.rssnews.presentation.common.components.Kicker
@@ -49,63 +52,65 @@ fun ArticleScreen(
     onShareClick: () -> Unit,
     modifier: Modifier = Modifier,
 ) {
-    Column(
-        modifier = modifier
-            .fillMaxSize()
-            .verticalScroll(rememberScrollState())
-            .padding(horizontal = 16.dp),
-    ) {
-        Row(
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(vertical = 8.dp),
-            verticalAlignment = Alignment.CenterVertically,
+    CompositionLocalProvider(LocalUriHandler provides rememberInAppUriHandler()) {
+        Column(
+            modifier = modifier
+                .fillMaxSize()
+                .verticalScroll(rememberScrollState())
+                .padding(horizontal = 16.dp),
         ) {
-            BackButton(onClick = onBackClick)
-            Spacer(modifier = Modifier.weight(1f))
-            FavoriteButton(isFavorite = article.isFavorite, onToggle = onToggleFavorite)
-            RssIconButton(icon = Lucide.Share2, contentDescription = "Share", onClick = onShareClick)
-        }
+            Row(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(vertical = 8.dp),
+                verticalAlignment = Alignment.CenterVertically,
+            ) {
+                BackButton(onClick = onBackClick)
+                Spacer(modifier = Modifier.weight(1f))
+                FavoriteButton(isFavorite = article.isFavorite, onToggle = onToggleFavorite)
+                RssIconButton(icon = Lucide.Share2, contentDescription = "Share", onClick = onShareClick)
+            }
 
-        NewsThumbnail(
-            previewUrl = article.previewUrl,
-            modifier = Modifier
-                .fillMaxWidth()
-                .height(220.dp),
-            label = "Lead photo",
-            cornerRadius = 8.dp,
-        )
+            NewsThumbnail(
+                previewUrl = article.previewUrl,
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .height(220.dp),
+                label = "Lead photo",
+                cornerRadius = 8.dp,
+            )
 
-        Spacer(modifier = Modifier.height(16.dp))
-        Kicker(text = article.category)
-        Spacer(modifier = Modifier.height(8.dp))
-        ScreenTitle(text = article.headline, style = MaterialTheme.typography.headlineLarge)
-        Spacer(modifier = Modifier.height(8.dp))
-        Byline(text = article.byline)
-        Spacer(modifier = Modifier.height(16.dp))
-        Text(
-            text = buildAnnotatedString {
-                append(article.body)
-                append(stringResource(Res.string.article_read_more_prefix))
-                withLink(
-                    LinkAnnotation.Url(
-                        url = article.sourceUrl,
-                        styles = TextLinkStyles(
-                            style = SpanStyle(
-                                color = MaterialTheme.colorScheme.primary,
-                                textDecoration = TextDecoration.Underline,
+            Spacer(modifier = Modifier.height(16.dp))
+            Kicker(text = article.category)
+            Spacer(modifier = Modifier.height(8.dp))
+            ScreenTitle(text = article.headline, style = MaterialTheme.typography.headlineLarge)
+            Spacer(modifier = Modifier.height(8.dp))
+            Byline(text = article.byline)
+            Spacer(modifier = Modifier.height(16.dp))
+            Text(
+                text = buildAnnotatedString {
+                    append(article.body)
+                    append(stringResource(Res.string.article_read_more_prefix))
+                    withLink(
+                        LinkAnnotation.Url(
+                            url = article.sourceUrl,
+                            styles = TextLinkStyles(
+                                style = SpanStyle(
+                                    color = MaterialTheme.colorScheme.primary,
+                                    textDecoration = TextDecoration.Underline,
+                                ),
                             ),
-                        ),
-                    )
-                ) {
-                    append(stringResource(Res.string.article_read_more_link))
-                }
-                append(stringResource(Res.string.article_read_more_suffix))
-            },
-            color = MaterialTheme.colorScheme.onBackground,
-            style = MaterialTheme.typography.bodyLarge,
-        )
-        Spacer(modifier = Modifier.height(32.dp))
+                        )
+                    ) {
+                        append(stringResource(Res.string.article_read_more_link))
+                    }
+                    append(stringResource(Res.string.article_read_more_suffix))
+                },
+                color = MaterialTheme.colorScheme.onBackground,
+                style = MaterialTheme.typography.bodyLarge,
+            )
+            Spacer(modifier = Modifier.height(32.dp))
+        }
     }
 }
 
